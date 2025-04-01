@@ -1,0 +1,13 @@
+# Etapa de instalación de dependencias
+FROM node:20.17.0-alpine3.20 AS dev-dependencies
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+
+# Etapa de desarrollo
+FROM node:20.17.0-alpine3.20 AS dev
+WORKDIR /app
+COPY --from=dev-dependencies /app/node_modules ./node_modules
+COPY . .
+EXPOSE 5173
+CMD ["npm", "run", "dev", "--", "--host"]
